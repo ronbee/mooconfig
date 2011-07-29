@@ -2,26 +2,31 @@
 Doing configuration with MongoDB
 
 - - - 
+#Install gem?
+gem install mooconfig
+
 #The how?
 
 ##Preliminaries
->MongoDB (http://www.mongodb.org/)
->See Gemfile for dependancies
+ MongoDB (http://www.mongodb.org/)
+ See Gemfile for dependancies
 
 ##Usage
->host = 'localhost'; port = 21017; db='foo'
+ host = 'localhost'; port = 21017; db='foo'
 
 ###Init
->mconf = MooConfig::Config.new( host, port, db )
+ mconf = MooConfig::Config.new( host, port, db )
 ###Set configuration
->mconf.set!( { "a" => true, "b" => { "b1" => "1", "b2" => 1234, "b3" => [ "z", 3, "e" ] }, "c" => "asdf" } ) # default config
->mconf.set!( { "a" => false, "b" => { "b1" => "1", "b2" => 1234, "b3" => [ "z", 3, "e" ] }, "c" => "asdf" }, "production" )
+ mconf.set!( { "a" => true, "b" => { "b1" => "1", "b2" => 1234, "b3" => [ "z", 3, "e" ] }, "c" => "asdf" } ) # default config
+
+ mconf.set!( { "a" => false, "b" => { "b1" => "1", "b2" => 1234, "b3" => [ "z", 3, "e" ] }, "c" => "asdf" }, "production" )
+
 ###Get configuration
->puts "production configuration: #{mconf.get( "production" )['a']} \n default configuration: #{mconf.get['a']}"
+ puts "production configuration: #{mconf.get( "production" )['a']} \n default configuration: #{mconf.get['a']}"
 
 ##Test
-> via guard and guardminitest
-> see test folder
+ via guard and guardminitest
+ see test folder
 
 #License
 ##The MIT License
