@@ -4,8 +4,8 @@ module MooConfig
 
   class Config
     DEFAULT_CONFIG_ID = 'default'
-    def initialize( host, port, db )
-      @cCollection   = Mongo::Connection.new( host, port ).db( db ).collection( 'config' )
+    def initialize( host, port, db, conf_collection='config' )
+      @cCollection   = Mongo::Connection.new( host, port ).db( db ).collection( conf_collection )
     rescue => err
       puts "Config::initialize something is wrong with mongo details [host:#{host}, port:#{port}, db:#{db}]"
       raise err
