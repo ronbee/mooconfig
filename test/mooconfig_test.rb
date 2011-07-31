@@ -12,9 +12,12 @@ class MatchTest < MiniTest::Unit::TestCase
 
   def setup
     c =  Mongo::Connection.new( HOST, PORT ).db( DB ).collection( 'config' )
-    c.update( { '_id' => 'default' }, { '_id' => 'default', 'c' => FIXED }, { :upsert => true } )
+    c.update( { '_id' => 'default' }, { '_id' => 'default', 'c' => FIXED }, { :upsert => true } )    
   end
 
+  def teardown
+    Mongo::Connection.new( HOST, PORT ).db( DB ).collection( 'config' ).remove( {'_id' => 'foo'})
+  end
 
   def test_get
     confie = MooConfig::Config.new( HOST, PORT, DB ).get
@@ -33,8 +36,26 @@ class MatchTest < MiniTest::Unit::TestCase
     confie.set!( confie.get, 'foo' )
 
     assert( confie.get( 'foo') == confie.get,  "Failed in test_no_default either get or set!")
-
-    Mongo::Connection.new( HOST, PORT ).db( DB ).collection( 'config' ).remove( {'_id' => 'foo'})
   end
-
+  
+  def test_observer        
+    confie = MooConfig::Config.new( HOST, PORT, DB )
+    obsr = TObserve::new confie
+    confie.set!( confie.get, 'foo' )
+    assert( obsr.touched && obsr.seen_id=='foo', "observer was not notified" )
+  end
+  
+  class TObserve
+    attr :touched, false
+    attr :seen_id, "_"
+    
+    def initialize(conf)
+      conf.add_observer self
+    end
+    def update( c_id, c_data )
+      @touched = true
+      @seen_id = 'foo'
+    end
+  end
+  
 end

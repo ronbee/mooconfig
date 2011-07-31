@@ -24,6 +24,20 @@ gem install mooconfig
 ###Get configuration
  puts "production configuration: #{mconf.get( "production" )['a']} \n default configuration: #{mconf.get['a']}"
 
+
+###Observers
+ Register observers -- get notifications whenever set!(..) is performed
+
+ 	class MyConfigObserver
+ 		def initialize(conf)
+   			conf.add_observer self # attach observer to the configuration
+ 		end
+ 		
+		def update( c_id, c_data )
+   			# .. get an update -- configuration id, and configuration data
+ 		end
+	end			
+
 ##Test
  via guard and guardminitest
  see test folder
